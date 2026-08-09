@@ -553,18 +553,18 @@
       document.getElementById('goToQuestionnaireBtn')?.addEventListener('click', () => showScreen('questionnaire'));
       document.getElementById('backToDesireFromMain')?.addEventListener('click', () => showScreen('desire'));
       document.getElementById('backToMainFromQ')?.addEventListener('click', () => showScreen('main'));
-
-     // ===== 问卷提交（Web3Forms） =====
+// ===== 问卷提交（Web3Forms 优化版） =====
 document.getElementById('submitQuestionnaireBtn')?.addEventListener('click', async () => {
-  const q1 = document.getElementById('q1')?.value.trim() || '';
-  const q2 = document.getElementById('q2')?.value.trim() || '';
-  const q3 = document.getElementById('q3')?.value.trim() || '';
+  const q1 = document.getElementById('q1')?.value.trim() || '（未填写）';
+  const q2 = document.getElementById('q2')?.value.trim() || '（未填写）';
+  const q3 = document.getElementById('q3')?.value.trim() || '（未填写）';
 
-  // ⚠️ 把下面这串换成你的 Web3Forms Access Key
   const accessKey = '4d4206e1-8dce-4827-a6b4-c7a578fc66fe';
 
   const formData = new FormData();
   formData.append('access_key', accessKey);
+  formData.append('from_name', '蚊子小站问卷');
+  formData.append('subject', '收到一份新的问卷回答');
   formData.append('恋爱模式', q1);
   formData.append('矛盾底线', q2);
   formData.append('开支分配', q3);
@@ -586,7 +586,6 @@ document.getElementById('submitQuestionnaireBtn')?.addEventListener('click', asy
     showScreen('thanks');
   }
 });
-
       document.getElementById('resetAllBtn')?.addEventListener('click', () => {
         ['q1','q2','q3'].forEach(id => {
           const el = document.getElementById(id);
