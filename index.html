@@ -554,35 +554,38 @@
       document.getElementById('backToDesireFromMain')?.addEventListener('click', () => showScreen('desire'));
       document.getElementById('backToMainFromQ')?.addEventListener('click', () => showScreen('main'));
 
-      // ===== 问卷提交（Formspree - 已配置你的表单ID） =====
-      document.getElementById('submitQuestionnaireBtn')?.addEventListener('click', async () => {
-        const q1 = document.getElementById('q1')?.value.trim() || '';
-        const q2 = document.getElementById('q2')?.value.trim() || '';
-        const q3 = document.getElementById('q3')?.value.trim() || '';
+     // ===== 问卷提交（Web3Forms） =====
+document.getElementById('submitQuestionnaireBtn')?.addEventListener('click', async () => {
+  const q1 = document.getElementById('q1')?.value.trim() || '';
+  const q2 = document.getElementById('q2')?.value.trim() || '';
+  const q3 = document.getElementById('q3')?.value.trim() || '';
 
-        const formspreeId = '4d4206e1-8dce-4827-a6b4-c7a578fc66fe';
+  // ⚠️ 把下面这串换成你的 Web3Forms Access Key
+  const accessKey = '4d4206e1-8dce-4827-a6b4-c7a578fc66fe';
 
-        try {
-          const resp = await fetch(`https://formspree.io/f/${formspreeId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              '恋爱模式': q1,
-              '矛盾底线': q2,
-              '开支分配': q3,
-              '提交时间': new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
-            })
-          });
-          if (resp.ok) {
-            showScreen('thanks');
-          } else {
-            alert('提交好像出了点问题，稍后再试试？');
-          }
-        } catch (e) {
-          console.log('问卷内容:', { q1, q2, q3 });
-          showScreen('thanks');
-        }
-      });
+  const formData = new FormData();
+  formData.append('access_key', accessKey);
+  formData.append('恋爱模式', q1);
+  formData.append('矛盾底线', q2);
+  formData.append('开支分配', q3);
+  formData.append('提交时间', new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }));
+
+  try {
+    const resp = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
+    });
+    const result = await resp.json();
+    if (result.success) {
+      showScreen('thanks');
+    } else {
+      alert('提交好像出了点问题，稍后再试试？');
+    }
+  } catch (e) {
+    console.log('问卷内容:', { q1, q2, q3 });
+    showScreen('thanks');
+  }
+});
 
       document.getElementById('resetAllBtn')?.addEventListener('click', () => {
         ['q1','q2','q3'].forEach(id => {
